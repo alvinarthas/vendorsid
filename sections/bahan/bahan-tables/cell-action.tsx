@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Bahan } from '@/constants/data';
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+import { Edit, MoreHorizontal, Trash, ReceiptText } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -41,9 +41,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/bahan/${data.id}`)}
+            onClick={() =>
+              router.push(`/dashboard/data/bahan/${data.id}/detail`)
+            }
+          >
+            <ReceiptText className="mr-2 h-4 w-4" /> Detail
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/dashboard/data/bahan/${data.id}/update`)
+            }
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
