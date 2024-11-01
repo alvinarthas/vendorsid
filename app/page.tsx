@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, CheckCircle, Mail, MapPin, Phone } from 'lucide-react';
+import AuthButton from '@/components/AuthButton';
 
 export default function Page() {
   return (
@@ -25,17 +26,21 @@ export default function Page() {
               BLOG
             </Link>
           </nav>
-          <Button>Contact Us</Button>
+          <div className="flex items-center space-x-4">
+            <AuthButton />
+            <Button>Contact Us</Button>
+          </div>
         </div>
       </header>
 
+      {/* Main content */}
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative">
+        <section className="relative py-20">
           <div className="absolute inset-0 bg-zinc-900/90">
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-900/90 to-zinc-900/60" />
           </div>
-          <div className="container relative flex min-h-[600px] flex-col items-center justify-center space-y-8 py-20 text-center text-white">
+          <div className="container relative flex min-h-[600px] flex-col items-center justify-center space-y-8 text-center text-white">
             <h1 className="text-4xl font-bold tracking-tighter md:text-6xl">
               Your Trusted Partner in
               <br />
