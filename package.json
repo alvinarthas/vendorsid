@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier . --write",
-    "prepare": "husky"
+    "prepare": "husky",
+    "seed": "pnpm exec ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts"
   },
   "lint-staged": {
     "**/*": [
@@ -55,12 +56,15 @@
     "@types/react-dom": "18.2.7",
     "@uploadthing/react": "^5.7.0",
     "autoprefixer": "10.4.15",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^1.0.0",
     "date-fns": "^2.30.0",
     "eslint": "8.48.0",
     "eslint-config-next": "^14.0.1",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.447.0",
     "match-sorter": "^6.3.4",
     "next": "^14.2.3",
@@ -92,6 +96,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.0.3",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/js-cookie": "^3.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/sort-by": "^1.2.3",
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
@@ -99,6 +106,7 @@
     "lint-staged": "^15.2.7",
     "prettier": "3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.14",
-    "prisma": "^5.21.1"
+    "prisma": "^5.21.1",
+    "ts-node": "^10.9.2"
   }
 }
