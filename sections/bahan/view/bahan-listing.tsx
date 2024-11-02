@@ -1,52 +1,37 @@
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import PageContainer from '@/components/layout/page-container';
-import { buttonVariants } from '@/components/ui/button';
-import { Heading } from '@/components/ui/heading';
-import { Separator } from '@/components/ui/separator';
-import { Bahan } from '@/constants/data';
-import { fakeBahans } from '@/constants/mock-api';
-import { searchParamsCache } from '@/lib/searchparams';
-import { cn } from '@/lib/utils';
-import { Plus } from 'lucide-react';
-import Link from 'next/link';
-import BahanTable from '../bahan-tables';
+'use client';
 
-type BahanListingPage = {};
+import { useEffect, useState } from 'react';
+import { getBahans } from '@/lib/api/bahan';
+import { BahanTable } from '../bahan-tables';
+import { Bahan } from '@prisma/client';
 
-export default async function BahanListingPage({}: BahanListingPage) {
-  // Showcasing the use of search params cache in nested RSCs
-  const page = searchParamsCache.get('page');
-  const search = searchParamsCache.get('q');
-  const pageLimit = searchParamsCache.get('limit');
+export function BahanListing() {
+  const [bahans, setBahans] = useState<Bahan[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filters = {
-    page,
-    limit: pageLimit,
-    ...(search && { search })
-  };
+  useEffect(() => {
+    async function fetchBahans() {
+      setIsLoading(true);
+      const { bahans, error } = await getBahans();
+      if (error) {
+        setError(error);
+      } else {
+        setBahans(bahans);
+      }
+      setIsLoading(false);
+    }
 
-  const data = await fakeBahans.getData(filters);
-  const totalData = data.total_data;
-  const bahans: Bahan[] = data.data;
+    fetchBahans();
+  }, []);
 
-  return (
-    <PageContainer>
-      <div className="space-y-4">
-        <div className="flex items-start justify-between">
-          <Heading
-            title={`Bahan`}
-            description="Atur bahan-bahan yang akan digunakan"
-          />
-          <Link
-            href={'/dashboard/data/bahan/create'}
-            className={cn(buttonVariants(), 'text-xs md:text-sm')}
-          >
-            <Plus className="mr-2 h-4 w-4" /> Tambah Baru
-          </Link>
-        </div>
-        <Separator />
-        <BahanTable data={bahans} totalData={totalData} />
-      </div>
-    </PageContainer>
-  );
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return <BahanTable data={bahans} />;
 }

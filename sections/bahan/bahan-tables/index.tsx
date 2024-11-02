@@ -1,42 +1,78 @@
 'use client';
 
-import { DataTable } from '@/components/ui/table/data-table';
-import { DataTableResetFilter } from '@/components/ui/table/data-table-reset-filter';
-import { DataTableSearch } from '@/components/ui/table/data-table-search';
-import { Bahan } from '@/constants/data';
-import { useBahanTableFilters } from './use-product-table-filters';
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import { Bahan } from '@prisma/client';
 import { columns } from './columns';
 
-export default function BahanTable({
-  data,
-  totalData
-}: {
+interface BahanTableProps {
   data: Bahan[];
-  totalData: number;
-}) {
-  const {
-    isAnyFilterActive,
-    resetFilters,
-    searchQuery,
-    setPage,
-    setSearchQuery
-  } = useBahanTableFilters();
+}
+
+export function BahanTable({ data }: BahanTableProps) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel()
+  });
 
   return (
-    <div className="space-y-4 ">
-      <div className="flex flex-wrap items-center gap-4">
-        <DataTableSearch
-          searchKey="bahan"
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          setPage={setPage}
-        />
-        <DataTableResetFilter
-          isFilterActive={isAnyFilterActive}
-          onReset={resetFilters}
-        />
-      </div>
-      <DataTable columns={columns} data={data} totalItems={totalData} />
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
 }

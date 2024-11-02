@@ -1,35 +1,41 @@
 'use client';
-import { Bahan } from '@/constants/data';
+
 import { ColumnDef } from '@tanstack/react-table';
-import Image from 'next/image';
+import { Bahan } from '@prisma/client';
 import { CellAction } from './cell-action';
+import Image from 'next/image';
 
 export const columns: ColumnDef<Bahan>[] = [
   {
-    accessorKey: 'photo_url',
-    header: 'Gambar',
+    accessorKey: 'imageUrl',
+    header: 'Image',
     cell: ({ row }) => {
+      const imageUrl: string = row.getValue('imageUrl') || '/placeholder.png';
       return (
-        <div className="relative aspect-square">
+        <div className="flex items-center justify-center">
           <Image
-            src={row.getValue('photo_url')}
-            alt={row.getValue('name')}
-            fill
-            className="rounded-lg"
+            src={imageUrl}
+            alt={`Image of ${row.getValue('name')}`}
+            width={50}
+            height={50}
+            className="rounded-md object-cover"
           />
         </div>
       );
     }
   },
   {
+    accessorKey: 'code',
+    header: 'Code'
+  },
+  {
     accessorKey: 'name',
-    header: 'Jenis Bahan'
+    header: 'Name'
   },
   {
     accessorKey: 'description',
-    header: 'Keterangan'
+    header: 'Description'
   },
-
   {
     id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />

@@ -1,18 +1,25 @@
-import { searchParamsCache } from '@/lib/searchparams';
-import { BahanListingPage } from '@/sections/bahan/view';
-import { SearchParams } from 'nuqs/parsers';
+import { Suspense } from 'react';
+import { BahanListing } from '@/sections/bahan/view/bahan-listing';
+import { Heading } from '@/components/ui/heading';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-type pageProps = {
-  searchParams: SearchParams;
-};
-
-export const metadata = {
-  title: 'Dashboard : Bahan'
-};
-
-export default async function Page({ searchParams }: pageProps) {
-  // Allow nested RSCs to access the search params (in a type-safe way)
-  searchParamsCache.parse(searchParams);
-
-  return <BahanListingPage />;
+export default function BahanPage() {
+  return (
+    <div className="flex-col">
+      <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex items-center justify-between">
+          <Heading title="Bahan" description="Manage your bahan inventory" />
+          <Link href="/dashboard/data/bahan/create">
+            <Button>Add New</Button>
+          </Link>
+        </div>
+        <Separator />
+        <Suspense fallback={<div>Loading...</div>}>
+          <BahanListing />
+        </Suspense>
+      </div>
+    </div>
+  );
 }
